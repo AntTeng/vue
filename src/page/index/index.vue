@@ -7,19 +7,15 @@
     </header>
     <swiper :options="swiperOption">
     <!-- slides -->
-    <swiper-slide>
+    <swiper-slide v-for="item in swiperInfo" :key="item.id">
       <div class="swiper-img-icon">
-        <img class="swiper-img" src="http://img1.qunarzz.com/piao/fusion/1712/d1/73dc10b5cd320202.jpg_640x200_02a40951.jpg"/>
+        <img class="swiper-img" :src="item.imgUrl"/>
       </div>
-    </swiper-slide>
-    <swiper-slide>
-        <div class="swiper-img-icon">
-          <img class="swiper-img" src="http://img1.qunarzz.com/piao/fusion/1609/15/630b82d932a3c402.jpg_640x200_862e836b.jpg"/>
-        </div>
     </swiper-slide>
     <!-- Optional controls -->
     <div class="swiper-pagination"  slot="pagination"></div>
     </swiper>
+    <div>123123132</div>
   </div>
 </template>
 
@@ -28,9 +24,32 @@ export default {
   name: 'Index',
   data () {
     return {
+      swiperInfo: [],
+      iconInfo: [],
       swiperOption: {
-        autoplay: 1000,
-        direction: 'horizontal'
+        autoplay: 10000,
+        direction: 'horizontal',
+        pagination: '.swiper-pagination',
+        loop: true
+      }
+    }
+  },
+  created () {
+    this.getIndexData()
+  },
+  methods: {
+
+    getIndexData () {
+      this.$http.get('static/index.json')
+        .then(this.handleGetDataSucc.bind(this))
+    },
+
+    handleGetDataSucc (res) {
+      const body = res.body
+      if (body && body.data && body.data.swiper) {
+        this.swiperInfo = body.data.swiper
+        this.iconInfo = body.data.icons
+        console.log(res)
       }
     }
   }
@@ -62,6 +81,9 @@ export default {
     }
     .swiper-img-con{
       width: 100%;
+      /*height: 31.25vh;*/
+      height: 0;
+      padding-bottom: 31.25%;
     }
     .swiper-img{
       width: 100%;
